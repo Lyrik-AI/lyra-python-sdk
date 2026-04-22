@@ -1,0 +1,28 @@
+[project]
+name = "lyra-python-sdk"
+version = "0.1.0"
+requires-python = ">=3.12"
+description = "Typed Python SDK for the LyrikTrip DataPipe domain-api."
+readme = "README.md"
+dependencies = [
+  "httpx>=0.28,<1.0",
+  "pydantic>=2.10,<3.0",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3,<9.0",
+  "ruff>=0.11,<0.12",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["lyra"]

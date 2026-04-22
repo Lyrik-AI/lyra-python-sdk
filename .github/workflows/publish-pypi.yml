@@ -1,0 +1,52 @@
+name: publish-pypi
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_version:
+        description: Version in pyproject.toml
+        required: true
+        type: string
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/lyra-python-sdk
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Validate package version
+        run: |
+          version=$(python - <<'PY'
+          import tomllib
+          from pathlib import Path
+          print(tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"])
+          PY
+          )
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            test "v${version}" = "${GITHUB_REF_NAME}"
+          else
+            test "${version}" = "${{ inputs.package_version }}"
+          fi
+      - name: Test package
+        run: uv run --project . pytest tests -q
+      - name: Build package
+        run: uv build .
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
