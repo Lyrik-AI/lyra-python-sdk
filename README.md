@@ -24,6 +24,8 @@ Every public SDK behavior, exported model, client namespace, dependency, or inst
 scripts/check-release.sh 0.1.1
 ```
 
+Detailed release steps live in `docs/release-checklist.md`.
+
 ## Development
 
 ```bash
