@@ -1,52 +1,69 @@
-name: publish-pypi
+name: Publish PyPI
 
 on:
-  workflow_dispatch:
-    inputs:
-      package_version:
-        description: Version in pyproject.toml
-        required: true
-        type: string
   push:
     tags:
-      - "v*"
+      - "v*.*.*"
 
 permissions:
   contents: read
 
 jobs:
   publish:
+    name: Build and publish
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/lyra-python-sdk
+    environment: pypi
     permissions:
       contents: read
       id-token: write
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
-      - name: Validate package version
+
+      - name: Verify tag matches project version
         run: |
-          version=$(python - <<'PY'
-          import tomllib
+          python - <<'PY'
           from pathlib import Path
-          print(tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"])
+          import os
+          import tomllib
+
+          tag = os.environ["GITHUB_REF_NAME"]
+          version = tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"]
+          expected_tag = f"v{version}"
+          if tag != expected_tag:
+              raise SystemExit(f"Tag {tag} does not match pyproject.toml version {version}")
           PY
-          )
-          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
-            test "v${version}" = "${GITHUB_REF_NAME}"
-          else
-            test "${version}" = "${{ inputs.package_version }}"
-          fi
-      - name: Test package
-        run: uv run --project . pytest tests -q
-      - name: Build package
-        run: uv build .
+
+      - name: Install build tools
+        run: python -m pip install --upgrade build pytest
+
+      - name: Run tests
+        run: python -m pytest tests -q
+
+      - name: Build distributions
+        run: python -m build
+
+      - name: Verify wheel metadata and import
+        run: |
+          python -m pip install --force-reinstall dist/*.whl
+          python - <<'PY'
+          from pathlib import Path
+          from importlib.metadata import version
+          import tomllib
+
+          from lyra import AsyncLyraClient
+
+          expected_version = tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"]
+          assert version("lyriktrip-lyra-python-sdk") == expected_version
+          client = AsyncLyraClient(base_url="https://example.test", api_key="")
+          assert hasattr(client, "route_v2")
+          PY
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1

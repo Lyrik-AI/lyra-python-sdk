@@ -17,8 +17,8 @@ Every public SDK behavior, exported model, client namespace, dependency, or inst
 
 1. Bump `[project].version` in `pyproject.toml`.
 2. Create and push the matching `vX.Y.Z` git tag.
-3. Publish the same version to PyPI as `lyriktrip-lyra-python-sdk`.
-4. Verify both the proxied GitHub archive and PyPI release:
+3. Let `.github/workflows/publish-pypi.yml` publish the same version to PyPI as `lyriktrip-lyra-python-sdk`.
+4. Verify both the proxied GitHub archive and PyPI release after the workflow succeeds:
 
 ```bash
 scripts/check-release.sh 0.1.1
