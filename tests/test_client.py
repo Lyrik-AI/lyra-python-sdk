@@ -42,7 +42,7 @@ def test_route_page_summary_sends_bearer_token_and_parses_typed_payload() -> Non
         transport=httpx.MockTransport(handler),
     )
 
-    summary = asyncio.run(client.query.route_pages.summary("premium-china"))
+    summary = asyncio.run(client.route_v2.summary("premium-china"))
 
     assert summary is not None
     assert summary.routePageId == "premium-china"
@@ -83,7 +83,7 @@ def test_route_page_list_parses_summary_collection() -> None:
         transport=httpx.MockTransport(handler),
     )
 
-    result = asyncio.run(client.query.route_pages.list())
+    result = asyncio.run(client.route_v2.list())
 
     assert result.items[0].routePageId == "premium-china"
     assert result.items[0].title.zh == "品质中国"
@@ -132,7 +132,7 @@ def test_route_page_journey_parses_module_payload() -> None:
         transport=httpx.MockTransport(handler),
     )
 
-    result = asyncio.run(client.query.route_pages.journey("premium-china"))
+    result = asyncio.run(client.route_v2.journey("premium-china"))
 
     assert result is not None
     assert result.routePageId == "premium-china"
@@ -191,7 +191,7 @@ def test_route_page_itinerary_parses_module_payload() -> None:
         transport=httpx.MockTransport(handler),
     )
 
-    result = asyncio.run(client.query.route_pages.itinerary("premium-china"))
+    result = asyncio.run(client.route_v2.itinerary("premium-china"))
 
     assert result is not None
     assert result.routePageId == "premium-china"
@@ -232,7 +232,7 @@ def test_route_page_hotels_parses_module_payload() -> None:
         transport=httpx.MockTransport(handler),
     )
 
-    result = asyncio.run(client.query.route_pages.hotels("premium-china"))
+    result = asyncio.run(client.route_v2.hotels("premium-china"))
 
     assert result is not None
     assert result.routePageId == "premium-china"
@@ -297,7 +297,7 @@ def test_route_page_experiences_parses_module_payload() -> None:
         transport=httpx.MockTransport(handler),
     )
 
-    result = asyncio.run(client.query.route_pages.experiences("premium-china"))
+    result = asyncio.run(client.route_v2.experiences("premium-china"))
 
     assert result is not None
     assert result.routePageId == "premium-china"
@@ -340,7 +340,7 @@ def test_experiences_list_parses_typed_payload() -> None:
         transport=httpx.MockTransport(handler),
     )
 
-    result = asyncio.run(client.query.experiences.list(page=1, page_size=12, q="festival"))
+    result = asyncio.run(client.experiences.list(page=1, page_size=12, q="festival"))
 
     assert result.items[0].publicId == "exp_festival_1"
     assert result.items[0].themeTags == ["festival", "ethnic"]
@@ -398,7 +398,7 @@ def test_experience_detail_parses_typed_payload() -> None:
         transport=httpx.MockTransport(handler),
     )
 
-    result = asyncio.run(client.query.experiences.retrieve("exp_festival_1"))
+    result = asyncio.run(client.experiences.get("exp_festival_1"))
 
     assert result is not None
     assert result.publicId == "exp_festival_1"
@@ -443,7 +443,7 @@ def test_restaurant_detail_parses_typed_payload() -> None:
         transport=httpx.MockTransport(handler),
     )
 
-    result = asyncio.run(client.query.restaurants.retrieve("poi_duck_house"))
+    result = asyncio.run(client.restaurants.get("poi_duck_house"))
 
     assert result is not None
     assert result.id == "poi_duck_house"
@@ -481,7 +481,7 @@ def test_guides_list_sends_query_params_and_parses_payload() -> None:
         transport=httpx.MockTransport(handler),
     )
 
-    result = asyncio.run(client.query.guides.list(page=1, page_size=10, q="", tag=""))
+    result = asyncio.run(client.guides.list(page=1, page_size=10, q="", tag=""))
 
     assert result.items[0].slug == "beijing-food-guide"
     assert result.items[0].readingMinutes == 8
@@ -518,7 +518,7 @@ def test_guide_detail_parses_payload() -> None:
         transport=httpx.MockTransport(handler),
     )
 
-    result = asyncio.run(client.query.guides.retrieve("beijing-food-guide"))
+    result = asyncio.run(client.guides.get("beijing-food-guide"))
 
     assert result is not None
     assert result.slug == "beijing-food-guide"
@@ -559,7 +559,7 @@ def test_destination_list_sends_query_params() -> None:
     )
 
     result = asyncio.run(
-        client.query.destinations.list(
+        client.destinations.list(
             page=2,
             page_size=10,
             q="bei",
@@ -583,7 +583,7 @@ def test_retrieve_returns_none_for_404() -> None:
         transport=httpx.MockTransport(handler),
     )
 
-    assert asyncio.run(client.query.routes.retrieve("missing-route")) is None
+    assert asyncio.run(client.routes.get("missing-route")) is None
 
 
 def test_authentication_errors_are_mapped() -> None:
@@ -596,7 +596,7 @@ def test_authentication_errors_are_mapped() -> None:
     )
 
     with pytest.raises(LyraAuthenticationError) as exc_info:
-        asyncio.run(client.query.routes.list())
+        asyncio.run(client.routes.list())
 
     assert exc_info.value.status_code == 403
     assert str(exc_info.value) == "bad token"
@@ -612,7 +612,7 @@ def test_server_errors_are_mapped() -> None:
     )
 
     with pytest.raises(LyraServerError) as exc_info:
-        asyncio.run(client.query.destinations.list())
+        asyncio.run(client.destinations.list())
 
     assert exc_info.value.status_code == 503
 
@@ -627,4 +627,4 @@ def test_invalid_response_shape_raises_validation_error() -> None:
     )
 
     with pytest.raises(LyraResponseValidationError):
-        asyncio.run(client.query.routes.list())
+        asyncio.run(client.routes.list())

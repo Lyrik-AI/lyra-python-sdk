@@ -51,7 +51,12 @@ class AsyncLyraClient:
             timeout=timeout,
         )
         self._transport = transport
-        self.query = QueryNamespace(self)
+        self.route_v2 = RouteV2Namespace(self)
+        self.destinations = DestinationsNamespace(self)
+        self.experiences = ExperiencesNamespace(self)
+        self.guides = GuidesNamespace(self)
+        self.restaurants = RestaurantsNamespace(self)
+        self.routes = RoutesNamespace(self)
 
     async def _get_model(
         self,
@@ -93,17 +98,7 @@ class AsyncLyraClient:
             raise LyraResponseValidationError("Lyra response does not match SDK model.") from exc
 
 
-class QueryNamespace:
-    def __init__(self, client: AsyncLyraClient) -> None:
-        self.route_pages = RoutePagesNamespace(client)
-        self.destinations = DestinationsNamespace(client)
-        self.experiences = ExperiencesNamespace(client)
-        self.guides = GuidesNamespace(client)
-        self.restaurants = RestaurantsNamespace(client)
-        self.routes = RoutesNamespace(client)
-
-
-class RoutePagesNamespace:
+class RouteV2Namespace:
     def __init__(self, client: AsyncLyraClient) -> None:
         self._client = client
 
@@ -181,7 +176,7 @@ class DestinationsNamespace:
             raise LyraResponseValidationError("Lyra destination list response is empty.")
         return result
 
-    async def retrieve(
+    async def get(
         self,
         destination_id: str,
         *,
@@ -222,7 +217,7 @@ class GuidesNamespace:
             raise LyraResponseValidationError("Lyra guides list response is empty.")
         return result
 
-    async def retrieve(self, slug: str) -> GuideDetail | None:
+    async def get(self, slug: str) -> GuideDetail | None:
         return await self._client._get_model(
             f"/api/v1/query/guide/{slug}",
             response_model=GuideDetail,
@@ -254,7 +249,7 @@ class ExperiencesNamespace:
             raise LyraResponseValidationError("Lyra experiences list response is empty.")
         return result
 
-    async def retrieve(self, experience_id: str) -> ExperienceDetail | None:
+    async def get(self, experience_id: str) -> ExperienceDetail | None:
         return await self._client._get_model(
             f"/api/v1/query/experience/{experience_id}",
             response_model=ExperienceDetail,
@@ -266,7 +261,7 @@ class RestaurantsNamespace:
     def __init__(self, client: AsyncLyraClient) -> None:
         self._client = client
 
-    async def retrieve(self, restaurant_id: str) -> RestaurantDetail | None:
+    async def get(self, restaurant_id: str) -> RestaurantDetail | None:
         return await self._client._get_model(
             f"/api/v1/query/restaurant/{restaurant_id}",
             response_model=RestaurantDetail,
@@ -300,7 +295,7 @@ class RoutesNamespace:
             raise LyraResponseValidationError("Lyra routes list response is empty.")
         return result
 
-    async def retrieve(self, route_id: str) -> RouteDetail | None:
+    async def get(self, route_id: str) -> RouteDetail | None:
         return await self._client._get_model(
             f"/api/v1/query/route-detail/{route_id}",
             response_model=RouteDetail,
