@@ -98,7 +98,7 @@ wheels = [
 ]
 
 [[package]]
-name = "lyra-python-sdk"
+name = "lyriktrip-lyra-python-sdk"
 version = "0.1.1"
 source = { editable = "." }
 dependencies = [

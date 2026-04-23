@@ -2,10 +2,13 @@
 
 Typed Python SDK for the LyrikTrip Lyra/DataPipe domain API.
 
+PyPI distribution name: `lyriktrip-lyra-python-sdk`.
+Python import package: `lyra`.
+
 ## Install from proxied GitHub source archive
 
 ```bash
-pip install "lyra-python-sdk @ https://proxy.cbotomo.com/https://github.com/Lyrik-AI/lyra-python-sdk/archive/refs/tags/v0.1.1.zip"
+pip install "lyriktrip-lyra-python-sdk @ https://proxy.cbotomo.com/https://github.com/Lyrik-AI/lyra-python-sdk/archive/refs/tags/v0.1.1.zip"
 ```
 
 ## Release rule
@@ -14,7 +17,8 @@ Every public SDK behavior, exported model, client namespace, dependency, or inst
 
 1. Bump `[project].version` in `pyproject.toml`.
 2. Create and push the matching `vX.Y.Z` git tag.
-3. Verify the proxied GitHub archive after publishing:
+3. Publish the same version to PyPI as `lyriktrip-lyra-python-sdk`.
+4. Verify both the proxied GitHub archive and PyPI release:
 
 ```bash
 scripts/check-release.sh 0.1.1
