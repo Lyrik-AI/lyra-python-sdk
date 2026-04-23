@@ -1,6 +1,6 @@
 [project]
 name = "lyra-python-sdk"
-version = "0.1.0"
+version = "0.1.1"
 requires-python = ">=3.12"
 description = "Typed Python SDK for the LyrikTrip DataPipe domain-api."
 readme = "README.md"
