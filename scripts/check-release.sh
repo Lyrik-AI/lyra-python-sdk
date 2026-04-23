@@ -12,8 +12,20 @@ tag="v${version}"
 repo_url="https://github.com/Lyrik-AI/lyra-python-sdk"
 archive_url="https://proxy.cbotomo.com/${repo_url}/archive/refs/tags/${tag}.zip"
 
+python_bin="${PYTHON:-}"
+if [[ -z "$python_bin" ]]; then
+  if command -v python3 >/dev/null 2>&1; then
+    python_bin="python3"
+  elif command -v python >/dev/null 2>&1; then
+    python_bin="python"
+  else
+    echo "Missing Python interpreter: set PYTHON, or install python3/python." >&2
+    exit 1
+  fi
+fi
+
 project_version="$(
-  python - <<'PY'
+  "$python_bin" - <<'PY'
 from pathlib import Path
 import tomllib
 
@@ -42,7 +54,7 @@ if [[ "$http_code" != "200" ]]; then
   exit 1
 fi
 
-python - "$tmp_file" <<'PY'
+"$python_bin" - "$tmp_file" <<'PY'
 from pathlib import Path
 import sys
 import zipfile
