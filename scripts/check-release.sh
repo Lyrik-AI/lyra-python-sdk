@@ -27,10 +27,12 @@ fi
 project_version="$(
   "$python_bin" - <<'PY'
 from pathlib import Path
-import tomllib
+import re
 
-data = tomllib.loads(Path("pyproject.toml").read_text())
-print(data["project"]["version"])
+match = re.search(r'^version\s*=\s*"([^"]+)"', Path("pyproject.toml").read_text(), re.M)
+if not match:
+    raise SystemExit("Missing [project].version in pyproject.toml")
+print(match.group(1))
 PY
 )"
 
