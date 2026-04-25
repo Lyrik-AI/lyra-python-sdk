@@ -20,17 +20,18 @@ Use this checklist whenever the public SDK behavior, exported models, client nam
    - wheel and sdist report `Name: lyriktrip-lyra-python-sdk`
    - wheel still imports as `lyra`
 5. Commit release changes to `main`
-6. Create or move the matching git tag:
-   - `git tag -f vX.Y.Z`
+6. Push the release commit to `origin/main` first:
    - `git push origin main`
+7. Only after `origin/main` contains the bumped version, create or move the matching git tag:
+   - `git tag -f vX.Y.Z`
    - `git push --force origin vX.Y.Z`
-7. Let GitHub Actions publish to PyPI:
+8. Let GitHub Actions publish to PyPI:
    - workflow: `.github/workflows/publish-pypi.yml`
    - environment: `pypi`
-8. Verify the published artifacts:
+9. Verify the published artifacts:
    - `scripts/check-release.sh X.Y.Z`
    - confirm PyPI JSON shows the expected version and files
-9. Update downstream consumers to the new archive URL if needed:
+10. Update downstream consumers to the new archive URL if needed:
    - `lyriktrip.com/apps/api/pyproject.toml`
    - corresponding lock files
 
@@ -41,3 +42,4 @@ Use this checklist whenever the public SDK behavior, exported models, client nam
   - workflow `publish-pypi.yml`
   - environment `pypi`
 - `skip-existing: true` is enabled in the publish workflow so a tag re-push does not fail after the files already exist on PyPI.
+- A common failure mode is pushing `vX.Y.Z` before the release commit lands on `origin/main`. In that case the workflow fails at `Verify tag matches project version` because the tag still points to a commit with the old `pyproject.toml` version.
