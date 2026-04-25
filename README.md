@@ -8,7 +8,7 @@ Python import package: `lyra`.
 ## Install from proxied GitHub source archive
 
 ```bash
-pip install "lyriktrip-lyra-python-sdk @ https://proxy.cbotomo.com/https://github.com/Lyrik-AI/lyra-python-sdk/archive/refs/tags/v0.1.1.zip"
+pip install "lyriktrip-lyra-python-sdk @ https://proxy.cbotomo.com/https://github.com/Lyrik-AI/lyra-python-sdk/archive/refs/tags/v0.1.2.zip"
 ```
 
 ## Release rule
@@ -21,7 +21,7 @@ Every public SDK behavior, exported model, client namespace, dependency, or inst
 4. Verify both the proxied GitHub archive and PyPI release after the workflow succeeds:
 
 ```bash
-scripts/check-release.sh 0.1.1
+scripts/check-release.sh 0.1.2
 ```
 
 Detailed release steps live in `docs/release-checklist.md`.
@@ -37,3 +37,5 @@ Python import name stays short and stable:
 ```python
 from lyra import AsyncLyraClient
 ```
+
+`client.route_v2.concierge(route_page_id)` returns the single public concierge chosen by DataPipe route-page bindings. The current public contract does not expose the full concierge binding list.

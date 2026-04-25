@@ -20,6 +20,7 @@ from lyra.models import (
     GuideDetail,
     GuidesListResponse,
     RestaurantDetail,
+    RoutePageConcierge,
     RouteDetail,
     RoutePageExperiences,
     RoutePageHotels,
@@ -146,6 +147,13 @@ class RouteV2Namespace:
         return await self._client._get_model(
             f"/api/v1/query/route-page/{route_page_id}/experiences",
             response_model=RoutePageExperiences,
+            allow_not_found=True,
+        )
+
+    async def concierge(self, route_page_id: str) -> RoutePageConcierge | None:
+        return await self._client._get_model(
+            f"/api/v1/query/route-page/{route_page_id}/concierge",
+            response_model=RoutePageConcierge,
             allow_not_found=True,
         )
 

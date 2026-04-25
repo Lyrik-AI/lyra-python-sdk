@@ -308,6 +308,49 @@ def test_route_page_experiences_parses_module_payload() -> None:
     assert seen["url"] == "http://datapipe.test/api/v1/query/route-page/premium-china/experiences"
 
 
+def test_route_page_concierge_parses_module_payload() -> None:
+    seen: dict[str, object] = {}
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen["url"] = str(request.url)
+        return httpx.Response(
+            200,
+            json={
+                "routePageId": "premium-china",
+                "id": "concierge_vivian_chen",
+                "name": "Vivian Chen",
+                "avatarInitials": "VC",
+                "title": "Private Travel Concierge · Premium China",
+                "tagline": "I'm not your tour guide. I'm the person who makes sure nothing goes wrong — and everything goes right.",
+                "bio": "Born in Shanghai, raised between Beijing and San Francisco.",
+                "stats": [
+                    {"n": "12", "label": "Years"},
+                    {"n": "500+", "label": "Journeys"},
+                    {"n": "4h", "label": "Response"},
+                ],
+                "languages": ["English", "中文", "Cantonese"],
+                "isOnline": True,
+                "onlineLabel": "Online",
+                "wechatId": "PremiumChinaVivian",
+                "status": "active",
+            },
+        )
+
+    client = AsyncLyraClient(
+        base_url="http://datapipe.test",
+        transport=httpx.MockTransport(handler),
+    )
+
+    result = asyncio.run(client.route_v2.concierge("premium-china"))
+
+    assert result is not None
+    assert result.routePageId == "premium-china"
+    assert result.avatarInitials == "VC"
+    assert result.languages[2] == "Cantonese"
+    assert result.wechatId == "PremiumChinaVivian"
+    assert seen["url"] == "http://datapipe.test/api/v1/query/route-page/premium-china/concierge"
+
+
 def test_experiences_list_parses_typed_payload() -> None:
     seen: dict[str, object] = {}
 

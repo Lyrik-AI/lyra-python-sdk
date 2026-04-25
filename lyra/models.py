@@ -134,6 +134,27 @@ class RoutePageExperiences(LyraModel):
     items: list[RoutePageExperienceItem] = Field(default_factory=list)
 
 
+class RoutePageConciergeStat(LyraModel):
+    n: str
+    label: str
+
+
+class RoutePageConcierge(LyraModel):
+    routePageId: str
+    id: str
+    name: str
+    avatarInitials: str | None = None
+    title: str
+    tagline: str | None = None
+    bio: str | None = None
+    stats: list[RoutePageConciergeStat] = Field(default_factory=list)
+    languages: list[str] = Field(default_factory=list)
+    isOnline: bool | None = None
+    onlineLabel: str | None = None
+    wechatId: str | None = None
+    status: str | None = None
+
+
 class GuideFaqItem(LyraModel):
     question: str
     answer: str
