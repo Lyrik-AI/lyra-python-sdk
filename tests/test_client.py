@@ -74,7 +74,35 @@ def test_route_page_list_parses_summary_collection() -> None:
                         "group": 12,
                         "status": "active",
                     }
-                ]
+                ],
+                "sections": [
+                    {
+                        "theme": {
+                            "id": "route_page_catalog_theme__classic_china",
+                            "slug": "classic-china",
+                            "status": "active",
+                            "sortOrder": 10,
+                            "eyebrow": {"en": "Iconic Routes", "zh": "经典路线"},
+                            "title": {"en": "Classic China", "zh": "经典中国"},
+                            "titleEmphasis": {"en": "China", "zh": "中国"},
+                            "subtitle": {"en": "The iconic triangle.", "zh": "经典三角线路。"},
+                        },
+                        "items": [
+                            {
+                                "routePageId": "premium-china",
+                                "slug": "premium-china",
+                                "title": {"en": "Premium China", "zh": "品质中国"},
+                                "subtitle": {"en": "12-day tour", "zh": "12天行程"},
+                                "price": 5375,
+                                "image": "https://cdn.lyriktrip.com/cover.webp",
+                                "highlights": ["Shanghai"],
+                                "duration": 12,
+                                "group": 12,
+                                "status": "active",
+                            }
+                        ],
+                    }
+                ],
             },
         )
 
@@ -87,6 +115,9 @@ def test_route_page_list_parses_summary_collection() -> None:
 
     assert result.items[0].routePageId == "premium-china"
     assert result.items[0].title.zh == "品质中国"
+    assert result.sections[0].theme.slug == "classic-china"
+    assert result.sections[0].theme.eyebrow.en == "Iconic Routes"
+    assert result.sections[0].items[0].routePageId == "premium-china"
     assert seen["url"] == "http://datapipe.test/api/v1/query/route-pages"
 
 

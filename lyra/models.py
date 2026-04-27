@@ -25,6 +25,22 @@ class RoutePageSummary(LyraModel):
     status: str
 
 
+class RoutePageCatalogTheme(LyraModel):
+    id: str
+    slug: str
+    status: str
+    sortOrder: int
+    eyebrow: BilingualText
+    title: BilingualText
+    titleEmphasis: BilingualText | None = None
+    subtitle: BilingualText
+
+
+class RoutePageCatalogSection(LyraModel):
+    theme: RoutePageCatalogTheme
+    items: list[RoutePageSummary] = Field(default_factory=list)
+
+
 class RoutePageQueryResponse(LyraModel):
     route_id: str
     summary: RoutePageSummary | None = None
@@ -32,6 +48,7 @@ class RoutePageQueryResponse(LyraModel):
 
 class RoutePageListResponse(LyraModel):
     items: list[RoutePageSummary]
+    sections: list[RoutePageCatalogSection] = Field(default_factory=list)
 
 
 class RoutePageJourneyHeroMetrics(LyraModel):
