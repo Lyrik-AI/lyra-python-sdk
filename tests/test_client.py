@@ -377,7 +377,7 @@ def test_route_page_concierge_parses_module_payload() -> None:
                     {"n": "500+", "label": "Journeys"},
                     {"n": "4h", "label": "Response"},
                 ],
-                "languages": ["English", "中文", "Cantonese"],
+                "languages": ["English", "Mandarin", "Cantonese"],
                 "isOnline": True,
                 "onlineLabel": "Online",
                 "wechatId": "PremiumChinaVivian",
