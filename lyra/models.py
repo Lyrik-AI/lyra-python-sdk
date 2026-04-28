@@ -156,11 +156,18 @@ class RoutePageConciergeStat(LyraModel):
     label: str
 
 
+class RoutePageConciergeService(LyraModel):
+    phase: str
+    icon: str | None = None
+    items: list[str] = Field(default_factory=list)
+
+
 class RoutePageConcierge(LyraModel):
     routePageId: str
     id: str
     name: str
     avatarInitials: str | None = None
+    avatarImage: str | None = None
     title: str
     tagline: str | None = None
     bio: str | None = None
@@ -169,6 +176,14 @@ class RoutePageConcierge(LyraModel):
     isOnline: bool | None = None
     onlineLabel: str | None = None
     wechatId: str | None = None
+    sectionName: str | None = None
+    sectionLabel: str | None = None
+    ctaPanelEyebrow: str | None = None
+    ctaPanelHeadline: str | None = None
+    ctaPanelSub: str | None = None
+    trustItems: list[str] = Field(default_factory=list)
+    ctaPrimary: str | None = None
+    services: list[RoutePageConciergeService] = Field(default_factory=list)
     status: str | None = None
 
 

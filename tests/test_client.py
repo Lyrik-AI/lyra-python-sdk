@@ -85,7 +85,10 @@ def test_route_page_list_parses_summary_collection() -> None:
                             "eyebrow": {"en": "Iconic Routes", "zh": "经典路线"},
                             "title": {"en": "Classic China", "zh": "经典中国"},
                             "titleEmphasis": {"en": "China", "zh": "中国"},
-                            "subtitle": {"en": "The iconic triangle.", "zh": "经典三角线路。"},
+                            "subtitle": {
+                                "en": "The iconic triangle.",
+                                "zh": "经典三角线路。",
+                            },
                         },
                         "items": [
                             {
@@ -169,7 +172,10 @@ def test_route_page_journey_parses_module_payload() -> None:
     assert result.routePageId == "premium-china"
     assert result.hero.metrics.durationDays == 12
     assert result.city_highlights[0].city_name.zh == "上海"
-    assert seen["url"] == "http://datapipe.test/api/v1/query/route-page/premium-china/journey"
+    assert (
+        seen["url"]
+        == "http://datapipe.test/api/v1/query/route-page/premium-china/journey"
+    )
 
 
 def test_route_page_itinerary_parses_module_payload() -> None:
@@ -207,7 +213,10 @@ def test_route_page_itinerary_parses_module_payload() -> None:
                                     "en": "Your first two days set the tone.",
                                     "zh": "最初两天为整段旅程定下节奏。",
                                 },
-                                "transports": {"en": "Flight · 1.5 hours", "zh": "航班 · 1.5小时"},
+                                "transports": {
+                                    "en": "Flight · 1.5 hours",
+                                    "zh": "航班 · 1.5小时",
+                                },
                                 "transmodel": "fly",
                                 "imgs": [],
                             }
@@ -229,7 +238,10 @@ def test_route_page_itinerary_parses_module_payload() -> None:
     assert result.themes[0].title.zh == "都市脉动"
     assert result.themes[0].cities[0].transports is not None
     assert result.themes[0].cities[0].transports.zh == "航班 · 1.5小时"
-    assert seen["url"] == "http://datapipe.test/api/v1/query/route-page/premium-china/itinerary"
+    assert (
+        seen["url"]
+        == "http://datapipe.test/api/v1/query/route-page/premium-china/itinerary"
+    )
 
 
 def test_route_page_hotels_parses_module_payload() -> None:
@@ -269,7 +281,10 @@ def test_route_page_hotels_parses_module_payload() -> None:
     assert result.routePageId == "premium-china"
     assert result.items[0].name.en == "The PuLi Hotel"
     assert result.items[0].nights == 2
-    assert seen["url"] == "http://datapipe.test/api/v1/query/route-page/premium-china/hotels"
+    assert (
+        seen["url"]
+        == "http://datapipe.test/api/v1/query/route-page/premium-china/hotels"
+    )
 
 
 def test_route_page_experiences_parses_module_payload() -> None:
@@ -336,7 +351,10 @@ def test_route_page_experiences_parses_module_payload() -> None:
     assert result.subheadline.zh == "七段精心策划的人文相遇。"
     assert result.items[0].host is not None
     assert result.items[0].host.name.zh == "詹姆斯"
-    assert seen["url"] == "http://datapipe.test/api/v1/query/route-page/premium-china/experiences"
+    assert (
+        seen["url"]
+        == "http://datapipe.test/api/v1/query/route-page/premium-china/experiences"
+    )
 
 
 def test_route_page_concierge_parses_module_payload() -> None:
@@ -363,6 +381,20 @@ def test_route_page_concierge_parses_module_payload() -> None:
                 "isOnline": True,
                 "onlineLabel": "Online",
                 "wechatId": "PremiumChinaVivian",
+                "sectionName": "concierge",
+                "sectionLabel": "Your Private Concierge",
+                "ctaPanelEyebrow": "Your concierge",
+                "ctaPanelHeadline": "One call. No obligation.",
+                "ctaPanelSub": "Your concierge responds within 4 hours.",
+                "trustItems": ["4-hour response", "No sales pressure"],
+                "ctaPrimary": "Activate Your Concierge",
+                "services": [
+                    {
+                        "phase": "Pre-Trip",
+                        "icon": "spark",
+                        "items": ["1-on-1 video call"],
+                    }
+                ],
                 "status": "active",
             },
         )
@@ -379,7 +411,13 @@ def test_route_page_concierge_parses_module_payload() -> None:
     assert result.avatarInitials == "VC"
     assert result.languages[2] == "Cantonese"
     assert result.wechatId == "PremiumChinaVivian"
-    assert seen["url"] == "http://datapipe.test/api/v1/query/route-page/premium-china/concierge"
+    assert result.sectionLabel == "Your Private Concierge"
+    assert result.trustItems[0] == "4-hour response"
+    assert result.services[0].phase == "Pre-Trip"
+    assert (
+        seen["url"]
+        == "http://datapipe.test/api/v1/query/route-page/premium-china/concierge"
+    )
 
 
 def test_experiences_list_parses_typed_payload() -> None:
@@ -418,7 +456,10 @@ def test_experiences_list_parses_typed_payload() -> None:
 
     assert result.items[0].publicId == "exp_festival_1"
     assert result.items[0].themeTags == ["festival", "ethnic"]
-    assert seen["url"] == "http://datapipe.test/api/v1/query/experiences?page=1&pageSize=12&q=festival"
+    assert (
+        seen["url"]
+        == "http://datapipe.test/api/v1/query/experiences?page=1&pageSize=12&q=festival"
+    )
 
 
 def test_experience_detail_parses_typed_payload() -> None:
@@ -559,7 +600,10 @@ def test_guides_list_sends_query_params_and_parses_payload() -> None:
 
     assert result.items[0].slug == "beijing-food-guide"
     assert result.items[0].readingMinutes == 8
-    assert seen["url"] == "http://datapipe.test/api/v1/query/guides?page=1&pageSize=10&q=&tag="
+    assert (
+        seen["url"]
+        == "http://datapipe.test/api/v1/query/guides?page=1&pageSize=10&q=&tag="
+    )
 
 
 def test_guide_detail_parses_payload() -> None:

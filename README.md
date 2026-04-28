@@ -38,4 +38,4 @@ Python import name stays short and stable:
 from lyra import AsyncLyraClient
 ```
 
-`client.route_v2.concierge(route_page_id)` returns the single public concierge chosen by DataPipe route-page bindings. The current public contract does not expose the full concierge binding list.
+`client.route_v2.concierge(route_page_id)` returns the single public concierge chosen by DataPipe route-page bindings, including the English display fields needed by public route pages. The current public contract does not expose the full concierge binding list.
